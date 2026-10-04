@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { SavedCounter } from '../models/saved-counter';
 import { Tab1Page } from './tab1.page';
 
 describe('Tab1Page', () => {
@@ -16,31 +17,34 @@ describe('Tab1Page', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should increment the counter', () => {
-    component.increment();
+  it('should keep saved counters independent between the two counters', () => {
+    const first: SavedCounter = {
+      id: 'first',
+      name: 'První',
+      value: 1,
+    };
+    const other: SavedCounter = {
+      id: 'other',
+      name: 'Jiné',
+      value: 2,
+    };
 
-    expect(component.count).toBe(1);
+    component.onLeftSaved(first);
+    component.onRightSaved(other);
+
+    expect(component.leftCounters).toEqual([first]);
+    expect(component.rightCounters).toEqual([other]);
   });
 
-  it('should decrement but never go below zero', () => {
-    component.decrement();
-    expect(component.count).toBe(0);
+  it('should delete a counter only from its own saved list', () => {
+    const first: SavedCounter = { id: 'first', name: 'První', value: 1 };
+    const second: SavedCounter = { id: 'second', name: 'Druhé', value: 2 };
+    component.leftCounters = [first, second];
+    component.rightCounters = [first];
 
-    component.count = 2;
-    component.decrement();
-    expect(component.count).toBe(1);
-  });
+    component.deleteLeftCounter('first');
 
-  it('should reset the counter and update the template', () => {
-    component.count = 5;
-    component.reset();
-    fixture.detectChanges();
-
-    const value = fixture.nativeElement.querySelector(
-      '.counter-value',
-    ) as HTMLElement;
-
-    expect(component.count).toBe(0);
-    expect(value.textContent?.trim()).toBe('0');
+    expect(component.leftCounters).toEqual([second]);
+    expect(component.rightCounters).toEqual([first]);
   });
 });

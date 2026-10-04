@@ -1,51 +1,42 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
   IonContent,
   IonHeader,
-  IonInput,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular';
+import { CounterComponent } from '../components/counter/counter.component';
+import { SavedCounter } from '../models/saved-counter';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
   imports: [
-    FormsModule,
-    IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
+    CounterComponent,
     IonContent,
     IonHeader,
-    IonInput,
     IonTitle,
     IonToolbar,
   ],
 })
 export class Tab1Page {
-  counterName = '';
-  count = 0;
+  leftCounters: SavedCounter[] = [];
+  rightCounters: SavedCounter[] = [];
 
-  increment(): void {
-    this.count++;
+  onLeftSaved(counter: SavedCounter): void {
+    this.leftCounters.unshift(counter);
   }
 
-  decrement(): void {
-    if (this.count > 0) {
-      this.count--;
-    }
+  onRightSaved(counter: SavedCounter): void {
+    this.rightCounters.unshift(counter);
   }
 
-  reset(): void {
-    this.count = 0;
+  deleteLeftCounter(id: string): void {
+    this.leftCounters = this.leftCounters.filter((counter) => counter.id !== id);
+  }
+
+  deleteRightCounter(id: string): void {
+    this.rightCounters = this.rightCounters.filter((counter) => counter.id !== id);
   }
 }

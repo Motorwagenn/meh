@@ -7,6 +7,11 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonListHeader,
+  IonNote,
 } from '@ionic/angular';
 import { SavedCounter } from '../../models/saved-counter';
 
@@ -22,14 +27,35 @@ import { SavedCounter } from '../../models/saved-counter';
     IonCardHeader,
     IonCardTitle,
     IonInput,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonListHeader,
+    IonNote,
   ],
 })
 export class CounterComponent {
   readonly heading = input('Nové počítadlo');
+  readonly savedCounters = input<SavedCounter[]>([]);
   readonly saved = output<SavedCounter>();
+  readonly deleteRequested = output<string>();
 
   counterName = '';
   count = 0;
+
+  get totalSavedValue(): number {
+    return this.savedCounters().reduce(
+      (total, counter) => total + counter.value,
+      0,
+    );
+  }
+
+  setCount(value: number | string | null): void {
+    const parsedValue = Number(value);
+    this.count = Number.isFinite(parsedValue)
+      ? Math.max(0, Math.trunc(parsedValue))
+      : 0;
+  }
 
   increment(): void {
     this.count++;
@@ -59,6 +85,5 @@ export class CounterComponent {
     });
 
     this.counterName = '';
-    this.count = 0;
   }
 }

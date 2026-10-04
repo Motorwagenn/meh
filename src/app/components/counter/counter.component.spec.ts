@@ -23,6 +23,17 @@ describe('CounterComponent', () => {
     expect(component.count).toBe(1);
   });
 
+  it('should set the counter to a non-negative whole number', () => {
+    component.setCount('4.8');
+    expect(component.count).toBe(4);
+
+    component.setCount(-3);
+    expect(component.count).toBe(0);
+
+    component.setCount(null);
+    expect(component.count).toBe(0);
+  });
+
   it('should decrement but never go below zero', () => {
     component.decrement();
     expect(component.count).toBe(0);
@@ -51,7 +62,7 @@ describe('CounterComponent', () => {
     expect(emitted).toEqual([]);
   });
 
-  it('should emit a saved counter and reset its state', () => {
+  it('should emit a saved counter and keep its value after saving', () => {
     const emitted: SavedCounter[] = [];
     component.saved.subscribe((counter) => emitted.push(counter));
     component.counterName = ' Návštěvníci ';
@@ -66,6 +77,6 @@ describe('CounterComponent', () => {
     });
     expect(emitted[0].id).toEqual(expect.any(String));
     expect(component.counterName).toBe('');
-    expect(component.count).toBe(0);
+    expect(component.count).toBe(3);
   });
 });

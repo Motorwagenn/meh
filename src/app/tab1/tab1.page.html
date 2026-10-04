@@ -5,30 +5,19 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <app-counter
-    heading="Nové počítadlo"
-    (saved)="onSaved($event)"
-  ></app-counter>
+  <div class="counter-grid">
+    <app-counter
+      heading="Počítadlo 1"
+      [savedCounters]="leftCounters"
+      (saved)="onLeftSaved($event)"
+      (deleteRequested)="deleteLeftCounter($event)"
+    ></app-counter>
 
-  @if (savedCounters.length > 0) {
-    <ion-list>
-      <ion-list-header>
-        <ion-label>Uložená počítadla</ion-label>
-      </ion-list-header>
-
-      @for (counter of savedCounters; track counter.id) {
-        <ion-item>
-          <ion-label>
-            <h2>{{ counter.name }}</h2>
-            <p>{{ counter.id }}</p>
-          </ion-label>
-          <ion-note slot="end">{{ counter.value }}</ion-note>
-        </ion-item>
-      }
-    </ion-list>
-  } @else {
-    <p class="empty-state">
-      Zatím nebylo uloženo žádné počítadlo.
-    </p>
-  }
+    <app-counter
+      heading="Počítadlo 2"
+      [savedCounters]="rightCounters"
+      (saved)="onRightSaved($event)"
+      (deleteRequested)="deleteRightCounter($event)"
+    ></app-counter>
+  </div>
 </ion-content>

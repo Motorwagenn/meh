@@ -2,11 +2,6 @@ import { Component } from '@angular/core';
 import {
   IonContent,
   IonHeader,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonNote,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular';
@@ -21,19 +16,27 @@ import { SavedCounter } from '../models/saved-counter';
     CounterComponent,
     IonContent,
     IonHeader,
-    IonItem,
-    IonLabel,
-    IonList,
-    IonListHeader,
-    IonNote,
     IonTitle,
     IonToolbar,
   ],
 })
 export class Tab1Page {
-  savedCounters: SavedCounter[] = [];
+  leftCounters: SavedCounter[] = [];
+  rightCounters: SavedCounter[] = [];
 
-  onSaved(counter: SavedCounter): void {
-    this.savedCounters.unshift(counter);
+  onLeftSaved(counter: SavedCounter): void {
+    this.leftCounters.unshift(counter);
+  }
+
+  onRightSaved(counter: SavedCounter): void {
+    this.rightCounters.unshift(counter);
+  }
+
+  deleteLeftCounter(id: string): void {
+    this.leftCounters = this.leftCounters.filter((counter) => counter.id !== id);
+  }
+
+  deleteRightCounter(id: string): void {
+    this.rightCounters = this.rightCounters.filter((counter) => counter.id !== id);
   }
 }

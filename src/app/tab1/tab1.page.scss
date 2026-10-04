@@ -1,3 +1,15 @@
+.counter-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+app-counter {
+  display: block;
+  min-width: 0;
+}
+
 ion-list {
   max-width: 32rem;
   margin: 1rem auto;
@@ -12,4 +24,10 @@ ion-note {
   margin: 2rem auto;
   color: var(--ion-color-medium);
   text-align: center;
+}
+
+@media (max-width: 700px) {
+  .counter-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

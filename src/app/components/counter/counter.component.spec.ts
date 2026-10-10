@@ -13,25 +13,27 @@ describe('CounterComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should increment the counter', () => {
-    component.increment();
-
-    expect(component.count).toBe(1);
-  });
-
-  it('should set the counter to a non-negative whole number', () => {
-    component.setCount('4.8');
+  it('should set a non-negative whole-number default and initialize the count', () => {
+    component.setStartingValue('4.8');
+    expect(component.startingValue).toBe(4);
     expect(component.count).toBe(4);
 
-    component.setCount(-3);
+    component.setStartingValue(-3);
+    expect(component.startingValue).toBe(0);
     expect(component.count).toBe(0);
 
-    component.setCount(null);
+    component.setStartingValue(null);
+    expect(component.startingValue).toBe(0);
     expect(component.count).toBe(0);
+  });
+
+  it('should keep the starting value independent from count changes', () => {
+    component.setStartingValue(5);
+
+    component.increment();
+
+    expect(component.startingValue).toBe(5);
+    expect(component.count).toBe(6);
   });
 
   it('should decrement but never go below zero', () => {
@@ -43,12 +45,13 @@ describe('CounterComponent', () => {
     expect(component.count).toBe(1);
   });
 
-  it('should reset the counter', () => {
+  it('should reset the counter to its starting value', () => {
+    component.setStartingValue(3);
     component.count = 5;
 
     component.reset();
 
-    expect(component.count).toBe(0);
+    expect(component.count).toBe(3);
   });
 
   it('should not save without a name', () => {
@@ -62,21 +65,23 @@ describe('CounterComponent', () => {
     expect(emitted).toEqual([]);
   });
 
-  it('should emit a saved counter and keep its value after saving', () => {
+  it('should emit the live count and keep both values after saving', () => {
     const emitted: SavedCounter[] = [];
     component.saved.subscribe((counter) => emitted.push(counter));
     component.counterName = ' Návštěvníci ';
-    component.count = 3;
+    component.setStartingValue(3);
+    component.increment();
 
     component.save();
 
     expect(emitted).toHaveLength(1);
     expect(emitted[0]).toMatchObject({
       name: 'Návštěvníci',
-      value: 3,
+      value: 4,
     });
     expect(emitted[0].id).toEqual(expect.any(String));
     expect(component.counterName).toBe('');
-    expect(component.count).toBe(3);
+    expect(component.startingValue).toBe(3);
+    expect(component.count).toBe(4);
   });
 });

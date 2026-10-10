@@ -18,8 +18,8 @@
       label-placement="stacked"
       min="0"
       step="1"
-      [ngModel]="count"
-      (ngModelChange)="setCount($event)"
+      [ngModel]="startingValue"
+      (ngModelChange)="setStartingValue($event)"
     ></ion-input>
 
     <p class="counter-value">{{ count }}</p>
@@ -58,37 +58,3 @@
     </ion-button>
   </ion-card-content>
 </ion-card>
-
-@if (savedCounters().length > 0) {
-  <ion-list>
-    <ion-list-header>
-      <ion-label>
-        Uložená počítadla ({{ savedCounters().length }})
-        | Celkem: {{ totalSavedValue }}
-      </ion-label>
-    </ion-list-header> 
-
-    @for (counter of savedCounters(); track counter.id) {
-      <ion-item>
-        <ion-label>
-          <h2>{{ counter.name }}</h2>
-          <p>{{ counter.id }}</p>
-        </ion-label>
-        <ion-note slot="end">{{ counter.value }}</ion-note>
-        <ion-button
-          slot="end"
-          fill="clear"
-          color="danger"
-          [attr.aria-label]="'Smazat'"
-          (click)="deleteRequested.emit(counter.id)"
-        >
-          Smazat
-        </ion-button>
-      </ion-item>
-    }
-  </ion-list>
-} @else {
-  <p class="empty-state">
-    Zatím nebylo uloženo žádné počítadlo.
-  </p>
-}

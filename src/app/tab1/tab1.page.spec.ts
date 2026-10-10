@@ -1,13 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SavedCounter } from '../models/saved-counter';
+import { CounterService } from '../services/counter.service';
 import { Tab1Page } from './tab1.page';
 
 describe('Tab1Page', () => {
   let component: Tab1Page;
   let fixture: ComponentFixture<Tab1Page>;
+  const counterService = {
+    add: vi.fn().mockResolvedValue(undefined),
+  };
 
   beforeEach(() => {
+    counterService.add.mockClear();
+    TestBed.configureTestingModule({
+      providers: [{ provide: CounterService, useValue: counterService }],
+    });
     fixture = TestBed.createComponent(Tab1Page);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -17,34 +25,16 @@ describe('Tab1Page', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should keep saved counters independent between the two counters', () => {
-    const first: SavedCounter = {
-      id: 'first',
-      name: 'První',
+  it('should save the single counter through CounterService', async () => {
+    const counter: SavedCounter = {
+      id: 'counter',
+      name: 'Počítadlo',
       value: 1,
-    };
-    const other: SavedCounter = {
-      id: 'other',
-      name: 'Jiné',
-      value: 2,
+      createdAt: '2026-09-17T08:00:00.000Z',
     };
 
-    component.onLeftSaved(first);
-    component.onRightSaved(other);
+    await component.onSaved(counter);
 
-    expect(component.leftCounters).toEqual([first]);
-    expect(component.rightCounters).toEqual([other]);
-  });
-
-  it('should delete a counter only from its own saved list', () => {
-    const first: SavedCounter = { id: 'first', name: 'První', value: 1 };
-    const second: SavedCounter = { id: 'second', name: 'Druhé', value: 2 };
-    component.leftCounters = [first, second];
-    component.rightCounters = [first];
-
-    component.deleteLeftCounter('first');
-
-    expect(component.leftCounters).toEqual([second]);
-    expect(component.rightCounters).toEqual([first]);
+    expect(counterService.add).toHaveBeenCalledExactlyOnceWith(counter);
   });
 });

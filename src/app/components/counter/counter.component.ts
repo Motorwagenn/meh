@@ -7,11 +7,6 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonNote,
 } from '@ionic/angular';
 import { SavedCounter } from '../../models/saved-counter';
 
@@ -27,34 +22,22 @@ import { SavedCounter } from '../../models/saved-counter';
     IonCardHeader,
     IonCardTitle,
     IonInput,
-    IonItem,
-    IonLabel,
-    IonList,
-    IonListHeader,
-    IonNote,
   ],
 })
 export class CounterComponent {
   readonly heading = input('Nové počítadlo');
-  readonly savedCounters = input<SavedCounter[]>([]);
   readonly saved = output<SavedCounter>();
-  readonly deleteRequested = output<string>();
 
   counterName = '';
+  startingValue = 0;
   count = 0;
 
-  get totalSavedValue(): number {
-    return this.savedCounters().reduce(
-      (total, counter) => total + counter.value,
-      0,
-    );
-  }
-
-  setCount(value: number | string | null): void {
+  setStartingValue(value: number | string | null): void {
     const parsedValue = Number(value);
-    this.count = Number.isFinite(parsedValue)
+    this.startingValue = Number.isFinite(parsedValue)
       ? Math.max(0, Math.trunc(parsedValue))
       : 0;
+    this.count = this.startingValue;
   }
 
   increment(): void {
@@ -68,7 +51,7 @@ export class CounterComponent {
   }
 
   reset(): void {
-    this.count = 0;
+    this.count = this.startingValue;
   }
 
   save(): void {
@@ -82,6 +65,7 @@ export class CounterComponent {
       id: crypto.randomUUID(),
       name,
       value: this.count,
+      createdAt: new Date().toISOString(),
     });
 
     this.counterName = '';

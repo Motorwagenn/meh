@@ -5,6 +5,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+
+  @if (counterService.errorMessage()) {
+    <p class="state-message">{{ counterService.errorMessage() }}</p>
+  }
+
+  @if (auth.userId(); as uid) {
+    <p class="state-message">Anonymní uživatel: {{ uid }}</p>
+  }
+
   @if (!counterService.initialized()) {
     <div class="state-message">
       <ion-spinner></ion-spinner>
@@ -55,7 +64,7 @@
             color="danger"
             fill="clear"
             aria-label="Odstranit záznam"
-            (click)="remove(counter.id)"
+            //(click)="remove(counter.id)"
           >
             Odstranit
           </ion-button>

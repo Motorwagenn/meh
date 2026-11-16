@@ -18,6 +18,8 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { CounterService } from '../services/counter.service';
+import { FirebaseAuthService } from '../services/firebase-auth.service';
+import { FirebaseCounterService } from '../services/firebase-counter.service';
 
 type SortField = 'name' | 'value';
 
@@ -45,7 +47,8 @@ type SortField = 'name' | 'value';
 })
 
 export class Tab2Page implements OnInit {
-  readonly counterService = inject(CounterService);
+  //readonly counterService = inject(CounterService);
+  readonly counterService = inject(FirebaseCounterService);
   private readonly alertController = inject(AlertController);
   private readonly toastController = inject(ToastController);
   readonly totalValue = computed(() =>
@@ -61,6 +64,9 @@ export class Tab2Page implements OnInit {
 
   readonly sortBy = signal<SortField>('name');
   readonly searchTerm = signal('');
+
+  readonly auth = inject(FirebaseAuthService);
+  readonly authError = signal('');
 
   readonly sortedCounters = computed(() => {
     const searchTerm = this.searchTerm().trim().toLocaleLowerCase();
@@ -85,7 +91,7 @@ export class Tab2Page implements OnInit {
     await this.counterService.initialize();
   }
 
-  async remove(id: string): Promise<void> {
+  /*async remove(id: string): Promise<void> {
     await this.counterService.remove(id);
 
     const toast = await this.toastController.create({
@@ -95,7 +101,7 @@ export class Tab2Page implements OnInit {
       positionAnchor: 'main-tab-bar',
     });
     await toast.present();
-  }
+  }*/
 
   async clear(): Promise<void> {
     const alert = await this.alertController.create({
@@ -116,7 +122,7 @@ export class Tab2Page implements OnInit {
     await alert.present();
 
     const { role } = await alert.onDidDismiss();
-    if (role === 'destructive') {
+    /*if (role === 'destructive') {
       await this.counterService.clear();
 
       const toast = await this.toastController.create({
@@ -126,6 +132,6 @@ export class Tab2Page implements OnInit {
         positionAnchor: 'main-tab-bar',
       });
       await toast.present();
-    }
+    }*/
   }
 }
